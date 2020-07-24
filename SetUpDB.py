@@ -1,2 +1,2 @@
-from GRE_vocabulary_learner2 import db
+from GRE_vocabulary_learner import db
 db.create_all()
