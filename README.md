@@ -28,3 +28,5 @@ Close python, and in the same location in terminal, run flask.
 Step5:
   Website is running on local host. Open it in any browser [Preferably safari or google chrome]
 
+For any Queries - contact me at - sid.ronaldo1904@gmail.com
+Siddhant Sinha
