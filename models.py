@@ -1,0 +1,33 @@
+from flask_login import UserMixin
+from . import db
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    username = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    name = db.Column(db.String(1000))
+    phone = db.Column(db.String(20))
+    w1 = db.Column(db.String(6))
+    w2 = db.Column(db.String(6))
+    w3 = db.Column(db.String(6))
+    w4 = db.Column(db.String(6))
+    w5 = db.Column(db.String(6))
+    w6 = db.Column(db.String(6))
+    w7 = db.Column(db.String(6))
+    w8 = db.Column(db.String(6))
+    w9 = db.Column(db.String(6))
+    w10 = db.Column(db.String(6))
+    w11 = db.Column(db.String(6))
+    w12 = db.Column(db.String(6))
+    w13 = db.Column(db.String(6))
+    w14 = db.Column(db.String(6))
+    w15 = db.Column(db.String(6))
+    w16 = db.Column(db.String(6))
+    w17 = db.Column(db.String(6))
+    w18 = db.Column(db.String(6))
+    w19 = db.Column(db.String(6))
+    w20 = db.Column(db.String(6))
+    w21 = db.Column(db.String(6))
+    w22 = db.Column(db.String(6))
+    w23 = db.Column(db.String(6))
+    w24 = db.Column(db.String(6))
