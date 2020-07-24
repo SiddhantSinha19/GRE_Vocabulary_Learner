@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>
+  Welcome, {{ name }}!
+</h1>
+<div class="row">
+
+	<div class="col-md-2">
+		
+    </div>
+
+	<div class="col-md-4 set-container">
+		<h3> Test yourself </h3>
+		<h5> Initiate a test of 50 random words </h5>
+		<form method="POST" action="/testyourself">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-4 video-container">
+		<h3> Taking GRE at home? Watch this.</h3>
+		<iframe src="https://www.youtube.com/embed/LZ4G_5oIDOU">
+		</iframe>
+    </div>
+
+    
+    <div class="col-md-2">
+		
+    </div>
+
+    
+</div>
+<div class="row">
+	<div class="col-md-2 set-container">
+		<h3> Word Set 1 </h3>
+		<h5> Progress: {{ w1 }}% </h5>
+		<form method="POST" action="/word_session1">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 2 </h3>
+		<h5> Progress: {{ w2 }}%</h5>
+		<form method="POST" action="/word_session2">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 3 </h3>
+		<h5> Progress: {{ w3 }}% </h5>
+		<form method="POST" action="/word_session3">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 4 </h3>
+		<h5> Progress: {{ w4 }}% </h5>
+		<form method="POST" action="/word_session4">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 5 </h3>
+		<h5> Progress: {{ w5 }}% </h5>
+		<form method="POST" action="/word_session5">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-2 set-container">
+		<h3> Word Set 6 </h3>
+		<h5> Progress: {{ w6 }}% </h5>
+		<form method="POST" action="/word_session6">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 7 </h3>
+		<h5> Progress: {{ w7 }}%</h5>
+		<form method="POST" action="/word_session7">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 8 </h3>
+		<h5> Progress: {{ w8 }}% </h5>
+		<form method="POST" action="/word_session8">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 9 </h3>
+		<h5> Progress: {{ w9 }}% </h5>
+		<form method="POST" action="/word_session9">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 10 </h3>
+		<h5> Progress: {{ w10 }}% </h5>
+		<form method="POST" action="/word_session10">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-2 set-container">
+		<h3> Word Set 11 </h3>
+		<h5> Progress: {{ w11 }}% </h5>
+		<form method="POST" action="/word_session11">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 12 </h3>
+		<h5> Progress: {{ w12 }}% </h5>
+		<form method="POST" action="/word_session12">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 13 </h3>
+		<h5> Progress: {{ w13 }}% </h5>
+		<form method="POST" action="/word_session13">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 14 </h3>
+		<h5> Progress: {{ w14 }}% </h5>
+		<form method="POST" action="/word_session14">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 15 </h3>
+		<h5> Progress: {{ w15 }}% </h5>
+		<form method="POST" action="/word_session15">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-2 set-container">
+		<h3> Word Set 16 </h3>
+		<h5> Progress: {{ w16 }}%</h5>
+		<form method="POST" action="/word_session16">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 17 </h3>
+		<h5> Progress: {{ w17 }}%</h5>
+		<form method="POST" action="/word_session17">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 18 </h3>
+		<h5> Progress: {{ w18 }}% </h5>
+		<form method="POST" action="/word_session18">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 19 </h3>
+		<h5> Progress: {{ w19 }}% </h5>
+		<form method="POST" action="/word_session19">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 20 </h3>
+		<h5> Progress: {{ w20 }}% </h5>
+		<form method="POST" action="/word_session20">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-2 set-container">
+		<h3> Word Set 21 </h3>
+		<h5> Progress: {{ w21 }}% </h5>
+		<form method="POST" action="/word_session21">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 22 </h3>
+		<h5> Progress: {{ w22 }}% </h5>
+		<form method="POST" action="/word_session22">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 23 </h3>
+		<h5> Progress: {{ w23 }}% </h5>
+		<form method="POST" action="/word_session23">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+    <div class="col-md-2 set-container">
+		<h3> Word Set 24 </h3>
+		<h5> Progress: {{ w24 }}% </h5>
+		<form method="POST" action="/word_session24">
+			<button type="submit" class="button"> Start Session </button>
+		</form>
+    </div>
+
+ 
+</div>
+{% endblock %}

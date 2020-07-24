@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GRE Vocabulary Learner</title>
+    <link rel="stylesheet" type="text/css" href="static/style26.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <style>
+        .button2 {
+        background-color: white;
+          border: none;
+          text-align: center;
+  
+          transition-duration: 0.4s;
+          cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Home</a>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mr-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+        
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                </li>
+                {% endif %}
+
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>  
+    </nav>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-3">
+                
+            </div>
+
+
+
+         
+            <div class="col-md-6 word-container">
+
+
+                <h3 id="ins" style="text-align: center;"> Instructions </h3>
+
+                <ul id="list" style="text-align: left;">
+                 <li id="it2"> You will be shown a few words, one at a time. </li>
+                 <li id="it3"> Click on show answer to display answer </li>
+                 <li id="it4"> If you know the word meaning, click on "I Knew" button. This will increase your score by 1.  </li>
+                 <li id="it5"> If you do not know click on "I didn't Know" button. </li>
+                <li id="it6"> By the end of the session you will add 15-20 new words to your vocabulary. </li>
+                <li id="it7"> Visit this session again if you found it tough/to practice again. </li>
+                    <li id="it8"> Remember that GRE is all about practice. Good Luck! </li>
+                    </ul>
+
+                
+                    <button id="startbtn" class="button" onclick="start()"> Start </button>
+               
+
+
+                <h3 id="word"> </h3> 
+                 
+                 <button id="readword" class="button2" onclick="readword()" style="display: inline-block;"><img height="15px" width="15px" src="static/speech.png"></button> 
+
+                <br>
+                <h3 id="meaning"> </h3>
+                
+                <button id="readmeaning" class="button2" onclick="readmeaning()" style="display: inline-block;"><img height="15px" width="15px" src="static/speech.png"></button> 
+                <br>
+                
+                <form action="/profile" method="GET">
+                    <button id="home" class="button">Go Home</button>
+                </form>
+                <form action="/saveprogress" method="POST">
+                    <input id="session" type="number" name="session"></input>
+                    <input id="correct" type="number" name="correct"></input>
+                    <input id="incorrect" type="number" name="incorrect"></input>
+                    <button type="submit" id="save" class="button">Save Progress</button>
+                </form>
+                <button id="shanswer" class="button" onclick="showanswer()">Show Answer</button>
+                <br>
+                <button id="know" class="button" onclick="iknow()">I Knew</button>
+                <button id="notknow" class="button" onclick="notknow()" style="display: inline-block;">I didn't Know</button>
+            </div>
+
+          <div class="col-md-2">
+                <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=IN&source=ac&ref=tf_til&ad_type=product_link&tracking_id=siddhantsinha-21&marketplace=amazon&region=IN&placement=0525567593&asins=0525567593&linkId=96f81d4bc9d65f6c7ffbd5215de5988f&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var keys = [];
+    var length;
+    var index=0;
+    var knewscore=0;
+    var notknewscore=0;
+    var word = document.getElementById("word");
+    var meaning = document.getElementById("meaning");
+    var corr_inp = document.getElementById("correct");
+    var incorr_inp = document.getElementById("incorrect");
+    var sess_inp = document.getElementById("session");
+    var showans_btn = document.getElementById("shanswer");
+    var know_btn = document.getElementById("know");
+    var notknow_btn = document.getElementById("notknow");
+
+
+ 
+    var word_set = {"loath":"reluctant; unwillingness",
+             "exculpate":"vindicate",
+             "quotidian":"daily; mundane",
+             "efficacious":"efficient; successful",
+             "prickly":"waspish, peevish, irritable",
+             "waspish":"prickly, peevish, irritable",
+             "precarious":"uncertain; likely to fall or collapse",
+             "lisp":"kind of speech defect",
+             "confound":"amazed, astonished",
+             "incontrovertible":"cannot be denied; indisputable",
+             "unimpeachable":"trustworthy; reliable",
+             "proposition":"theory; hypothesis",
+             "deride":"ridicule; mock",
+             "rhetoric":"oratory; eloquence",
+             "presumptuous":"failing to observe limits of what is permitted or appropriate",
+             "muddled":"untidy; not clear; not coherent",
+             "maverick":"independent-minded person",
+             "consternation":"dismay; anxiety",
+             "detractors":"critic; disparager",
+             "despicable":"deserving hatred; contempt"};
+
+
+    
+    $(document).ready(function(){
+        $('#home').hide();
+        $('#correct').hide();
+        $('#incorrect').hide();
+        $('#session').hide();
+        $('#save').hide();
+           
+        $('#word').show();
+        $('#meaning').show();
+        $('#readword').hide();
+        $('#readmeaning').hide();
+        $('#know').hide();
+        $('#notknow').hide();
+        $('#shanswer').hide();
+        sess_inp.value=8;
+        for (var key in word_set) {
+                keys.push(key);
+        }
+
+        length = keys.length;
+        
+    });
+    function start(){
+        $('#word').show();
+        $('#meaning').show();
+        $('#ins').hide();
+        $('#li').hide();
+        $('#startbtn').hide();
+        $('#know').show();
+        $('#notknow').show();
+        $('#shanswer').show();
+       
+        $('#it1').hide();
+        $('#it2').hide();
+        $('#it3').hide();
+        $('#it4').hide();
+        $('#it5').hide();
+        $('#it6').hide();
+        $('#it7').hide();
+        $('#it8').hide();
+
+        word.innerHTML = keys[index];
+        $('#readword').show();
+        
+    }
+    function showanswer(){
+        $('#readmeaning').show();
+        speechSynthesis.cancel();
+        $('#meaning').show();
+        meaning.innerHTML = word_set[keys[index]];       
+        
+        
+    }
+
+    function iknow(){
+        speechSynthesis.cancel();
+        index=index+1;
+        knewscore = knewscore+1;
+        if(index==length){
+            $('#readword').hide();
+            $('#readmeaning').hide();
+            $('#home').show();
+            $('#meaning').show();
+            $('#know').hide();
+            $('#notknow').hide();
+            $('#shanswer').hide();
+            $('#save').show();
+     
+            
+            word.innerHTML = "You Knew: "+knewscore;
+            meaning.innerHTML = "You didn't know: "+notknewscore;
+            corr_inp.value = knewscore;
+            incorr_inp.value = notknewscore;
+        }
+        else{
+            
+            $('#meaning').hide();
+            $('#readmeaning').hide();
+           
+            speechSynthesis.cancel();
+            word.innerHTML = keys[index];
+            
+        }
+    }
+
+    function notknow(){
+        speechSynthesis.cancel();
+
+        index=index+1;
+        notknewscore = notknewscore+1;
+        if(index==length){
+            $('#home').show();
+            $('#readword').hide();
+            $('#meaning').show();
+            $('#know').hide();
+            $('#notknow').hide();
+            $('#shanswer').hide();
+            $('#save').show();
+            $('#readmeaning').hide();
+           
+            
+            corr_inp.value = knewscore;
+            incorr_inp.value = notknewscore;
+            word.innerHTML = "You Knew: "+knewscore;
+            meaning.innerHTML = "You didn't know: "+notknewscore;
+        }
+        else{
+            $('#readmeaning').hide();
+            $('#meaning').hide();
+            
+            word.innerHTML = keys[index];
+            
+        }
+    }
+
+    function readword(){
+        speechSynthesis.speak(new SpeechSynthesisUtterance(keys[index]));
+    }
+    function readmeaning(){
+        speechSynthesis.speak(new SpeechSynthesisUtterance(word_set[keys[index]]));
+    }
+</script>
+</html>
+
+   

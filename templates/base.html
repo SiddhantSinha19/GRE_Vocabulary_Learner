@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GRE Vocabulary Learner</title>
+    <link rel="stylesheet" type="text/css" href="static/style26.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">About</a>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mr-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+        
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                </li>
+                {% endif %}
+
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>  
+    </nav>
+    <br>
+    <div class="container-fluid">
+       {% block content %}
+       {% endblock %}
+
+    </div>
+</body>
+<script>
+    function validatesignupform() {
+        var password = document.forms["sign_up_form"]["password"].value;
+        var conf_password = document.forms["sign_up_form"]["confirm_password"].value;
+        var username = document.forms["sign_up_form"]["username"].value;
+        for (var i = 0; i < password.length; i++) {
+            if(password.charAt(i)==' '){
+                alert("Password can not have white space");
+                return false;
+            }
+        }
+
+        for (var i = 0; i < username.length; i++) {
+            if(username.charAt(i)==' '){
+                alert("Username can not have white space");
+                return false;
+            }
+        }
+
+        if (password != conf_password) {
+            alert("Passwords do not match");
+            return false;
+        }
+
+        if(password.length < 8){
+            alert("Password must be atleast 8 characters long");
+            return false;
+        }
+    }
+</script>
+
+</html>

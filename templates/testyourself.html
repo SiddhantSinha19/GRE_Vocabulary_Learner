@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GRE Vocabulary Learner</title>
+    <link rel="stylesheet" type="text/css" href="static/style26.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+     <style>
+        .button2 {
+        background-color: white;
+          border: none;
+          text-align: center;
+  
+          transition-duration: 0.4s;
+          cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Home</a>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mr-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+        
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                </li>
+                {% endif %}
+
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>  
+    </nav>
+    <br>
+    <div class="container-fluid">
+		<div class="row">
+
+			<div class="col-md-3">
+				
+		    </div>
+
+
+
+		 
+		    <div class="col-md-6 word-container">
+
+                <h3 id="ins" style="text-align: center;"> Instructions </h3>
+
+                <ul id="list" style="text-align: left;">
+                 <li id="it2"> You will be shown a few words, one at a time. </li>
+                 <li id="it3"> Click on show answer to display answer </li>
+                 <li id="it4"> If you know the word meaning, click on "I Knew" button. This will increase your score by 1.  </li>
+                 <li id="it5"> If you do not know click on "I didn't Know" button. </li>
+                <li id="it6"> By the end of the session you will have an estimate of how well you are remembering words. </li>
+                <li id="it7"> Visit this session again if you want to practice again. </li>
+                    <li id="it8"> Remember that GRE is all about practice. Good Luck! </li>
+                    </ul>
+                    <button id="startbtn" class="button" onclick="start()"> Start </button>
+                
+                <h3 id="videotitle" style="margin-top:3%;"> Strategy to improve you GRE score. Watch This. </h3>
+                    <iframe id="video" src="https://www.youtube.com/embed/1T0eLJENLfE">
+                    </iframe>
+				<h3 id="word"> </h3>
+				<button id="readword" class="button2" onclick="readword()" style="display: inline-block;"><img height="15px" width="15px" src="static/speech.png"></button> 
+				<br>
+
+				<h3 id="meaning"> </h3>
+				<button id="readmeaning" class="button2" onclick="readmeaning()" style="display: inline-block;"><img height="15px" width="15px" src="static/speech.png"></button> 
+
+				<br>
+				
+				<form action="/profile" method="GET">
+					<button id="home" class="button">Go Home</button>
+				</form>
+				
+				<button id="shanswer" class="button" onclick="showanswer()">Show Answer</button>
+				<br>
+				<button id="know" class="button" onclick="iknow()">I Knew</button>
+				<button id="notknow" class="button" onclick="notknow()" style="display: inline-block;">I didn't Know</button>
+		    </div>
+
+		    <div class="col-md-3">
+				
+		    </div>
+		</div>
+	</div>
+</body>
+
+<script>
+	var keys = [];
+    var length;
+    var min=0; 
+    var max=514;  
+    var index = Math.floor(Math.random() * (+max - +min)) + +min; 
+    var count=0;
+    var knewscore=0;
+    var notknewscore=0;
+    var word = document.getElementById("word");
+    var meaning = document.getElementById("meaning");
+    var showans_btn = document.getElementById("shanswer");
+    var know_btn = document.getElementById("know");
+    var notknow_btn = document.getElementById("notknow");
+
+
+
+	var word_set = {"curt":"Abrupt rudely",
+         "prolix":"tediously lengthy",
+         "protract":"extend",
+         "rift":"schism; dissension within organization",
+         "collude":"conspire; collaborate",
+         "vacuous":"lacking thought or intelligence",
+         "improvident":"rash; without any foresight; Also - spending recklessly",
+         "perjure":"to lie under an oath; prevaricate",
+         "peruse":"scrutinize",
+         "recondite":"little known; abstruse; obscure",
+         "adjure":"command solemnly",
+         "entreat":"ask someone to do something anxiously",
+         "beseech":"entreat; ask someone to do something anxiously",
+         "jurisprudence":"study/ science of law",
+         "pontificate":"pompously; portentous",
+         "portentous":"pompously",
+         "tout":"laud",
+             "herald":"laud",
+             "pernicious":"malefactor; having an harmful effect",
+             "nemesis":"antagonist; adversary",
+             "virulent":"harmful; malignant",
+             "gratis":"free of charge",
+             "ingratiate":"flatter; toady; cajole; coax; wheedle",
+             "gratify":"please, placate",
+             "paean":"encomium; praise enthusiastically; extolment",
+             "encomium":"praise enthusiastically; paean; extolment",
+             "extolment":"encomium; praise enthusiastically; paean",
+             "prosaic":"trite; banal",
+             "sublime":"extraordinary",
+             "imperturbable":"calm and composed",
+             "vapid":"tasteless; bland; thoughtless",
+             "fatuous":"silly; inane; asinine",
+             "labile":"mercurial; liable to change",
+             "revamp":"renovate",
+             "hale":"active; lively, spry",
+             "spry":"active; lively, hale",
+             "dastardly":"wicked and cruel",
+             "invidiousness":"arousing resentment or anger in others",
+             "carping":"complaining, fault-finding, critical; cavilling; captious",
+             "cavilling ":"carping; complaining, fault-finding, critical; captious",
+             "captious":"carping; complaining, fault-finding, critical; cavilling",
+             "bilious":"easily irritable; splenetic; fractious",
+             "fractious":"easily irritable; splenetic; bilious",
+             "blithe":"cheerly optimistic; sanguine",
+             "buoyant":"cheerly optimistic; sanguine",
+             "forlorn":"melancholy",
+             "docile":"submissive",
+             "beguile":"charm often in a deceptive way; entrance",
+             "entrance":"charm often in a deceptive way; beguile",
+             "chicanery":"trickery; deceitfulness",
+             "rapacious":"greedy, covetous",
+             "deciduous":"transient, evanescent",
+             "intermittent":"sporadic; episodic",
+             "episodic":"sporadic",
+             "capricious":"sudden change in mood or behaviour; fickle; mercurial",
+             "interminable":"never ending",
+             "incessant":"never ending",
+             "expedite":"speed up; hasten",
+             "derisive":"censure; castigate; rebuke; diatribe",
+             "deprecate":"express disapproval",
+             "impugn":"question the validity or truthfulness",
+             "repudiate":"reject; cast off",
+             "sacrosanct":"sacred; consecrated, inviolable",
+             "consecrated":"sacrosanct; to declare to be holy",
+             "inviolable":"never to be dishonoured; holy and sacred",
+             "sacrament":"religious oath",
+             "venerable":"revered",
+             "sanctuary":"place of refuge; holy place; shrine",
+             "sacrilegious":"disrespect to something holy, blasphemous, desecrate, impious",
+             "blasphemous":"sacrilegious; disrespect to something holy, desecrate, impious",
+             "desecrate":"sacrilegious; disrespect to something holy, blasphemous, impious",
+             "impious":"sacrilegious; disrespect to something holy, blasphemous, desecrate",
+             "pious":"respect",
+             "deify":"idolize; regard as god",
+             "apotheosize":"idolize; regard as god",
+             "bulwark":"defensive wall; strong defence",
+             "rampart":"defensive wall/ temporary fortification; bulwark",
+             "redoubt":"defensive wall/ temporary fortification; bulwark",
+             "effete":"worthless, incapable, weakened; feckless",
+             "feckless":"worthless, incapable, weakened",
+             "formidable":"hard to overcome; redoubtable",
+             "redoubtable":"hard to overcome; formidable",
+             "paramount":"very important or eminent",
+             "stalwart":"strong supporter",
+             "mainstay":"a thing or person on which something else is based on",
+             "partisan":"strong supporter of a party or cause",
+             "accrue":"stockpile money",
+             "anthology":"collection of works",
+             "eclectic":"made of many parts; multifaceted; multifarious",
+             "penchant":"predilection, propensity, proclivity",
+             "proclivity":"predilection, propensity, penchant",
+             "disreputable":"notorious",
+             "denigrate":"criticise severely",
+             "fetter":"to tie up; chain up",
+             "revile":"condemn, criticize, denigrate",
+             "unassuming":"modest",
+             "aberration":"irregularity, anomaly",
+             "abate":"to subside",
+             "ebb":"wane; grow smaller over time",
+             "wane":"ebb; grow smaller over time",
+             "wax":"intensify, amplify",
+             "debilitate":"to sap of energy; attrition; enervate",
+             "attrition":"to sap of energy; debilitate; enervate",
+             "respite":"rest; pause",
+             "hiatus":"discontinuity",
+             "cantankerous":"bad tempered, uncooperative",
+             "berate":"criticize; scold; censure",
+             "torpid":"hibernating; inert; dormant",
+             "frenzied":"frenetic; turbulent; wildly excited",
+             "turbulent":"frenetic; frenzied; wildly excited",
+             "refute":"to disprove; rebut; rebuttal; rejoinder",
+             "rejoinder":"sharp witty reply",
+             "torment":"cause a suffering",
+             "surly":"unfriendly",
+             "geniality":"cheerfulness",
+             "propriety":"up to conventional standards and morals; etiquette",
+             "acrimony":"bitterness of feeling; rancour",
+             "rancour":"bitterness of feeling; acrimony",
+             "deplorable":"offensively bad; flagrant",
+             "flagrant":"offensively bad; deplorable",
+             "astringent":"caustic; harsh",
+             "acrid":"harsh smelling or tasting",
+             "lurid":"vividly shocking; graphic content",
+             "appalling":"shocking; causing dismay",
+             "noisome":"unpleasant; loathsome",
+             "vagrant":"wandering from place to place",
+             "veer":"steer; change direction",
+             "coerce":"force someone to do something by threat",
+             "scratch":"cancel or abort",
+             "abdicate":"give up power; relinquish; renounce; resign",
+             "cathartic":"relief through purging out of emotions",
+             "efface":"erase",
+             "rescind":"cancel; annul",
+             "purge":"to cleanse; remove something unwanted",
+             "raze":"destroy completely; obliterate",
+             "obliterate":"destroy completely; raze",
+             "braggart":"egotist",
+             "gaudy":"garnish; flashy; ostentatious",
+             "garnish":"gaudy; flashy; ostentatious",
+             "baroque":"ostentatious; extravagantly ornate; flamboyant; florid",
+             "flamboyant":"ostentatious; extravagantly ornate; baroque; florid",
+             "florid":"ostentatious; extravagantly ornate; flamboyant; baroque",
+             "prolific":"abundant; plentiful",
+             "recluse":"hermit; ascetic; loner",
+             "apropos":"with respect to; appropriate to do",
+             "warrant":"justify; guarantee or affirm",
+             "deliberation":"long and careful consideration",
+             "rationale":"logical; reasonable",
+             "feign":"simulate; pretend; fake; or pretend to be affected by",
+             "disabuse":"persuade someone that the idea or belief is wrong",
+             "loath":"reluctant; unwillingness",
+             "exculpate":"vindicate",
+             "quotidian":"daily; mundane",
+             "efficacious":"efficient; successful",
+             "prickly":"waspish, peevish, irritable",
+             "waspish":"prickly, peevish, irritable",
+             "precarious":"uncertain; likely to fall or collapse",
+             "lisp":"kind of speech defect",
+             "confound":"amazed, astonished",
+             "incontrovertible":"cannot be denied; indisputable",
+             "unimpeachable":"trustworthy; reliable",
+             "proposition":"theory; hypothesis",
+             "deride":"ridicule; mock",
+             "rhetoric":"oratory; eloquence",
+             "presumptuous":"failing to observe limits of what is permitted or appropriate",
+             "muddled":"untidy; not clear; not coherent",
+             "maverick":"independent-minded person",
+             "consternation":"dismay; anxiety",
+             "detractors":"critic; disparager",
+             "despicable":"deserving hatred; contempt",
+             "simpatico":"compatible; of one mind",
+             "propitious":"favourable; indicating a good chance of success",
+             "pan":"criticize severely",
+             "tepid":"slightly warm; lukewarm",
+             "befuddle":"confused; unable to think clearly",
+             "turgid":"stiff; pompous",
+             "profligate":"prodigal, extravagant",
+             "solicitous":"showing interest or concern",
+             "gimmick":"a trick; artifices",
+             "artifices":"a trick; gimmick",
+             "hysteric":"extreme or wild reaction; exaggerated reaction; ALSO Extreme sadness",
+             "lackey":"servile; toady; sycophant",
+             "gainsay":"deny; contradict",
+             "quandary":"uncertainty over what to do in a difficult situation",
+             "facile":"ignoring true complexities; simplistic",
+             "unblemished":"not damaged; flawless; impeccable",
+             "profound":"deep and insightful",
+             "ramble":"deviate off topic; diverge; digress",
+             "esoteric":"impossible to comprehend; baffle; unfathomable",
+             "enigmatic":"mysterious; puzzling",
+             "insolvent":"broke",
+             "portend":"to give advance warning",
+             "augur":"predict future; prophecy; prescient",
+             "portent":"omen",
+             "remnant":"artefact; relic",
+             "poignant":"causing a sharp response",
+             "ignominy":"humiliation; shame",
+             "dilapidated":"decrepit; threadbare; worn out",
+             "decrepit":"dilapidated; threadbare; worn out",
+             "penitent":"contrite; contrition; remorse; repentant",
+             "repentant":"contrite; contrition; remorse; penitent",
+             "piquant":"pungent; zesty",
+             "impassive":"cold hearted; apathy",
+             "ascertain":"to make certain",
+             "deterrent":"something that acts to discourage",
+             "foil":"prevent from succeeding; thwart; stymie; hinder",
+             "exhort":"strongly urge or encourage to do something",
+             "begrudge":"to give in something reluctantly; concede; surrender",
+             "concede":"surrender; to give in something reluctantly; begrudge",
+             "bemusement":"puzzlement; confusion",
+             "confabulate":"engage in conversation",
+             "salutary":"beneficial; good",
+             "estrange":"to be no longer on friendship term",
+             "milieu":"context; environment",
+             "fortitude":"courage; bravery",
+             "encumber":"restrict; impede; hinder",
+             "heavy-handed":"clumsy; awkward; insensitive",
+             "accusatory":"indication that someone has done something wrong",
+             "buffer":"to lessen the impact of; cushion",
+             "substantiate":"support; provide evidence",
+             "preposterous":"absurd; ridiculous",
+             "discourse":"debate; discussion",
+             "homily":"religious discourse",
+             "abreast of":"up to date; in a row",
+             "fortuitous":"fortuity; chance; unexpected",
+             "fortuity":"fortuitous; chance; unexpected",
+             "shun":"avoid; ignore; reject",
+             "amortize":"gradually pay of initial cost or debt",
+             "agglomerate":"collect or form in a mass or group",
+             "maudlin":"self-pitying; sentimental",
+             "effusive":"showing gratitude",
+             "tenacious":"having firm hold; dogged; inexorable",
+             "inexorable":"relentless, unstoppable",
+             "pertinacity":"steadfast; staying committed to one thing",
+             "steadfast":"unchanging; unwavering",
+             "intransigent":"uncompromising; inflexible",
+             "transcendent":"superior; exceptional",
+             "immaculate":"clean; spotless",
+             "bailiwick":"one's area of expertise; prowess",
+             "prowess":"one's area of expertise; bailiwick",
+             "precocious":"early development of abilities",
+             "agility":"quick to understand; nimbleness",
+             "nimbleness":"quick to understand; agility",
+             "exacerbate":"to make worse",
+             "exonerate":"vindicate; exculpate",
+             "exculpate":"vindicate; exonerate",
+             "impeach":"challenge or question",
+             "conciliate":"placate",
+             "rile":"to annoy; vex",
+             "emollient":"to soften",
+             "warmonger":"combatant; fighter",
+             "epicurean":"hedonist; sybarite",
+             "sybarite":"hedonist; epicurean",
+             "fanatic":"enthusiast; extreme radical",
+             "machination":"subterfuge; ruse; stratagem; careful ploy or scheme",
+             "embezzle":"to steal money; pilfer; filch",
+             "filch":"to steal money; pilfer; embezzle",
+             "bilk":"to cheat; swindle",
+             "bigotry":"intolerance towards those who are different",
+             "delinquent":"tendency to commit crime; malefactor",
+             "vile":"loathsome; extremely unpleasant; abhorrent; odious; abominable",
+             "abhorrent":"loathsome; extremely unpleasant; vile; odious; abominable",
+             "odious":"loathsome; extremely unpleasant; vile; abhorrent; abominable",
+             "abominable":"loathsome; extremely unpleasant; vile; abhorrent; odious",
+             "embitter":"make someone feel bitter or resentful",
+             "conceited":"excessively proud of oneself; vain",
+             "inoculate":"immunize",
+             "hypodermic":"under the skin",
+             "epidermis":"outermost layer of skin",
+             "chiropodist":"treats minor foot ailment; podiatrist",
+             "senile":"deteriorated old age; having illness a due to old age; senility",
+             "philology":"study of literary texts",
+             "astronomical":"of huge size",
+             "dichotomous":"thinking that everything divides into 2",
+             "tome":"old dull heavy book",
+             "veteran":"long experience in a particular field",
+             "laborious":"demanding",
+             "parity":"equality",
+             "disparity":"inequality",
+             "preclude":"prevent from happening",
+             "equity":"fairness",
+             "inequity":"unfairness",
+             "iniquity":"immoral; sinful behaviour",
+             "trivial":"not important",
+             "maladroit":"unskilful",
+             "malice":"ill-will",
+             "malady":"illness",
+             "malcontent":"dissatisfied person",
+             "maladjusted":"failing to cope up with normal social environment",
+             "volition":"free will",
+             "complacent":"satisfied with oneself with narrow accomplishments",
+             "smug":"showing excessive pride in one's achievements",
+             "magnate":"influential person",
+             "verbiage":"excessive word; style or manner of using words",
+             "amble":"walk aimlessly",
+             "chauvinist":"excessively patriotic",
+             "blatant":"open and unashamed",
+             "termagant":"virago; rude woman; harridan",
+             "patron":"one who gives financial support",
+             "patrician":"aristocrat; nobleman",
+             "paternalism":"governance having father-child like relation",
+             "sanctimony":"showing that you are morally superior",
+             "fraternize":"having brotherly relationship",
+             "regalia":"royal ornaments etc",
+             "dipsomania":"alcoholism",
+             "megalomania":"obsession with exercise of power",
+             "delusions of grandeur":"false impression of one's own importance",
+             "felony":"crime",
+             "agnosticism":"dont know whether god exists or not; absence of knowledge",
+             "incendiary":"tending to stir up",
+             "hypercritical":"excessive fault finding",
+             "unflinching":"not showing fear in a difficult situations",
+             "imbue":"inspire someone with something; saturate; soak",
+             "gourmand":"over eater",
+             "gourmet":"connoisseur of good food",
+             "peppy":"lively and high spirited",
+             "ingenuous":"innocent; open; frank",
+             "disingenuous":"cruel; cunning",
+             "ingenious":"disingenuous; cruel; cunning",
+             "credulous":"willingness to believe",
+             "incredulous":"not willing to believe",
+             "perspicacious":"lucid",
+             "conspicuous":"easily seen",
+             "punctilious":"very careful; scrupulous",
+             "punctuates":"interrupt something",
+             "animus":"animosity",
+             "scintilla":"spark; small amount",
+             "crude":"basic; without much detail",
+             "niggardly":"parsimonious; ungenerous with money",
+             "confluence":"meeting; joining; junction",
+             "vicarious":"experienced in imagination through someone else's feelings of action",
+             "persiflage":"light banter",
+             "contempt":"disdain; scorn",
+             "phonetics":"science of language of sounds",
+             "voracious":"devouring; hence greedy",
+             "potentate":"powerful ruler",
+             "carnelian":"reddish color",
+             "commiserate":"to sympathize",
+             "exhilarate":"make someone feel thrilled or elated",
+             "bereave":"deprived or close relation cuz of death",
+             "capitulum":"title",
+             "capitulate":"surrender, yield",
+             "dissemble":"hide your feelings or true intentions; dissimulate",
+             "dissimulate":"hide your feelings or true intentions; dissemble",
+             "wretched":"very unhappy",
+             "obsequies":"burial ceremony",
+             "petulant":"childish sulky or bad tempered",
+             "dolour":"poetic synonym of grief",
+             "cadaverous":"very pale, thin body",
+             "decadent":"moral or cultural decline",
+             "bibulous":"very fond of alcohol",
+             "apocryphal":"of doubtful authenticity; counterfeit; forged",
+               "debunk":"to expose something as fraudulent; reveal; uncover",
+               "affect":"pretend; feign",
+               "verisimilitude":"quality of appearing to be true",
+                "impertinent":"rude; bold; brazen; impudent; insolent; irreverence; effrontery",
+               "impudent":"rude; bold; brazen; insolent; impertinent; irreverence; effrontery",
+               "effrontery":"rude; bold; brazen; impudent; insolent; irreverence; impertinent",
+               "facetious":"not showing seriousness; frivolity; flippant",
+               "rebuff":"refuse in an abrupt manner; snub; (can be ignore)",
+               "affront":"insult; slur; barb",
+               "slur":"insult; affront; barb",
+               "barb":"slur; affront; insult",
+               "aspersion":"defamatory remark; obloquy",
+               "obloquy":"aspersion; defamatory remark",
+               "burlesque":"humorous imitation of something; parody; satire; spoof",
+               "spoof":"humorous imitation of something; parody; satire; burlesque",
+               "bard":"skilled poet",
+               "waggish":"playful or mischievous",
+               "reproach":"scold; rebate; reprimand; reprove; berate",
+               "reprove":"scold; rebate; reprimand; reproach; berate",
+               "impeach":"accuse someone of an offense; indict",
+               "indict":"accuse someone of an offense; impeach",
+               "irreproachable":"beyond criticism; faultless",
+               "reprehensible":"worth of blame or censure",
+               "conscientious":"do one's own work or duty well and thoroughly",
+               "enterprising":"full of innovation and imagination",
+               "lackadaisical":"lacking enthusiasm",
+                 "heretic":"rebel; iconoclast; apostasy; dissident; heresy",
+               "apostasy":"abandonment of a belief; iconoclast; heretic; dissident; heresy",
+               "dissident":"strong oppose to accepted opinion; iconoclast; apostasy; heretic; heresy",
+               "heresy":"opinion or action against traditional belief; iconoclast; apostasy; heretic; dissident",
+               "insubordinate":"refusal to submit to authority; rebellious",
+               "seditious":"inciting people or mass to rebel against authority",
+               "woo":"persuade; speak in favour of",
+               "sterling":"valuable; excellent",
+               "sombre":"seriousness; dark",
+               "conducive":"helpful",
+               "desiccated":"arid; parched; completely dried up",
+               "fallow":"unused; ploughed but not cultivated; dormant",
+               "sylvan":"bucolic; pastoral; characteristic of a country side; rustic",
+               "quagmire":"swampy; marshy; bog; also means difficult situation",
+               "fecund":"highly fertile hence producing in abundant quantity",
+               "eremite":"hermit; recluse; loner",
+               "solitariness":"solitude; isolation; seclusion",
+               "camaraderie":"companionship",
+               "ostracize":"banish; exile; expulsion",
+               "capitulation":"surrender; yield; cession",
+               "cession":"surrender; yield; capitulation",
+                 "appropriate":"take another's work or possession as your own",
+               "adjunct":"added in subordinate capacity; subordinate; subsidiary",
+               "hoard":"collect; stockpile",
+               "engulf":"inundate; overwhelm; to flood; swamp; deluge",
+               "deluge":"inundate; overwhelm; to flood; swamp; engulf",
+               "dispel":"scatter out; spread; disseminate; diffuse; dissipate; disperse",
+               "distend":"swell; extend; dilate",
+               "procreate":"breed; reproduce",
+               "rampant":"growing out of control",
+               "rife":"general; common; widespread",
+               "burgeon":"to grow; sprout; bud; germinate",
+               "tribulation":"cause of great distress or suffering; affliction",
+               "doldrums":"persistent unhappiness; depression; melancholy",
+               "requiem":"funeral song; elegy; dirge",
+               "pallid":"weak; feeble; anaemic",
+               "paltry":"inadequate amount; barely enough; meagre; paucity; scanty; dearth",
+               "desolate":"barren; deserted; sterile (infertile)",
+               "capacious":"voluminous; spacious",
+               "replete":"completely filled; cramped; stuffed",
+               "surfeit":"over abundance; plethora; glut",
+               "glut":"over abundance; plethora; surfeit",
+               "rarefy":"make less dense; less plentiful",
+             "pulchritude":"beauty",
+               "minutiae":"attention to small details and trivial things",
+               "peccadillo":"minor fault or crime",
+               "parlous":"dangerous; risky; precarious",
+               "semiotic":"study of signs and symbols",
+               "careen":"rush; move swiftly and uncontrollably",
+               "trundle":"move heavily and slowly",
+               "tarry":"delay in leaving a place; stay longer than expected",
+               "irate":"anger; furious",
+               "droll":"funny; humorous",
+               "solipsism; solipsistic":"self-interest",
+               "grasping":"avaricious; greedy",
+               "plaintive":"sad and mournful",
+               "communist":"collectivist",
+               "furnish":"be a source of; provide",
+               "pique":"arouse - interest or curiosity; feel irritated or resentful",
+               "wrest":"take something from someone forcefully",
+               "pensive":"thoughtful",
+               "restive":"restless; not able to remain calm",
+               "overwrought":"tensed; anxious",
+               "putative":"assumed; presumed; supposed",
+               "extenuate":"mitigate",
+               "poise":"balance and calm",
+               "headless; heedlessness":"reckless; not taking care",
+             "mordant":"caustic; sharp or bitter remark",
+               "mendacity":"untruthfulness; dishonesty",
+               "supple":"flexible",
+               "vertiginous":"high or steep",
+               "quixotic":"extreme idealism; utopian",
+               "utopian":"extreme idealism, quixotic",
+               "dialectic":"disagreement",
+               "Machiavellian":"cunning and unscrupulous",
+               "mortify":"great embarrassment",
+               "saturnine":"gloomy; sad; melancholy",
+               "onerous":"heavy; burdensome",
+               "dispassionate":"ordinary",
+               "infallibility":"can't go wrong; can't be blamed",
+               "Discomfit":"embarrassment ",
+               "clement":"mild; merciful",
+               "implausible":"unlikely; unreasonable",
+               "supplant":"supersede and replace",
+               "pulverize":"total annihilation; reduce to small particles",
+               "moribund":"at the point of death; declining",
+               "ineffectual":"ineffective; inefficient",
+               "fulsome":"extremely generous in thanking, apologising or praising",
+               "recuperate":"convalesce",
+             "pidgin":"grammatically simplified form of language",
+               "extirpate":"eradicate; destroy",
+               "uninhibited":"unrestrained; expressing without restrains",
+               "salacious":"obscene",
+               "wry":"mocking, ironic",
+               "puckish":"playful; mischievous",
+               "prowl":"walk restlessly and stealthily",
+               "spectre":"ghost; threat",
+               "rail":"complain or protest",
+               "puffery":"exaggerated or false praise",
+               "dynamo":"energetic person",
+               "excogitate":"think out; plan; devise",
+               "draconian":"harsh; strict",
+               "floe":"sheet of ice",
+               "cad":"man who behaves dishonourly",
+               "orchestrate":"plan; coordinate; organize",
+               "contrapuntal":"having 2 components",
+               "ballast":"support",
+               "rend":"tear into pieces",
+               "evince":"reveal; indicate",
+               "bungle":"carry out a task incompetently",
+               "stanchion":"a bar or post that provides support",
+               "tantamount":"equivalent; virtually similar to",
+               "institutional":"organized; established",
+               "boosterish":"supporting something enthusiastically",
+               "indubitably":"impossible to doubt",
+               "lax":"not sufficiently strict; negligent",
+               "sophistry":"deceiving",
+               "venial":"pardonable; forgivable",
+             "filibuster":"stall; obstruct",
+               "opprobrium":"vilification",
+               "cadences":"modulation of voice",
+               "accentuate":"make noticeable or prominent",
+               "retrench":"cut or reduce",
+               "deliverance":"act of setting free; liberation",
+               "promulgate":"promote; publicize",
+               "explicate":"explain; analyse; expound",
+               "despise":"hate; loath; abhor",
+               "exuberance":"full of energy; buoyancy; ebullience",
+               "disconcerting":"unsettling",
+               "amnesty":"pardon; forgiveness",
+               "ludicrously":"strange; ridiculous; absurd",
+               "garble":"mix up; muddle",
+               "foolhardy":"reckless; rash",
+               "uncouth":"uncivilized; uncultured",
+               "boisterous":"lively; energetic; noisy",
+               "pyrrhic":"won at great cost",
+               "vituperative":"bitter; abusive",
+               "bane":"cause of great distress"
+             };
+
+
+
+    
+    $(document).ready(function(){
+    	$('#home').hide();
+        $('#correct').hide();
+        $('#incorrect').hide();
+        $('#session').hide();
+        $('#save').hide();
+           
+        $('#word').show();
+        $('#meaning').show();
+        $('#readword').hide();
+        $('#readmeaning').hide();
+        $('#know').hide();
+        $('#notknow').hide();
+        $('#shanswer').hide();
+        
+        for (var key in word_set) {
+            keys.push(key);
+        }
+
+		length = 50;
+        
+    });
+
+    function start(){
+        $('#word').show();
+        $('#meaning').show();
+        $('#ins').hide();
+        $('#li').hide();
+        $('#startbtn').hide();
+        $('#know').show();
+        $('#notknow').show();
+        $('#shanswer').show();
+        $('#it1').hide();
+        $('#it2').hide();
+        $('#it3').hide();
+        $('#it4').hide();
+        $('#it5').hide();
+        $('#it6').hide();
+        $('#it7').hide();
+        $('#it8').hide();
+        $('#video').hide();
+        $('#videotitle').hide();
+
+        word.innerHTML = keys[index];
+        $('#readword').show();
+    }
+
+    function showanswer(){
+    	$('#readmeaning').show();
+        speechSynthesis.cancel();
+        $('#meaning').show();
+        meaning.innerHTML = word_set[keys[index]];    
+	}
+
+    function iknow(){
+    	speechSynthesis.cancel();
+        count = count+1;
+    	index = Math.floor(Math.random() * (+max - +min)) + +min; 
+    	knewscore = knewscore+1;
+    	if(count==length){
+    		$('#home').show();
+    		$('#meaning').show();
+    		$('#know').hide();
+    		$('#notknow').hide();
+    		$('#readmeaning').hide();
+    		$('#readword').hide();
+    		$('#shanswer').hide();
+    		word.innerHTML = "You Knew: "+knewscore;
+    		meaning.innerHTML = "You didn't know: "+notknewscore;
+    		
+    	}
+    	else{
+    		$('#meaning').hide();
+            $('#readmeaning').hide();
+           
+            speechSynthesis.cancel();
+            word.innerHTML = keys[index];
+
+    	}
+	}
+
+	function notknow(){
+		speechSynthesis.cancel();
+        count = count+1;
+		index = Math.floor(Math.random() * (+max - +min)) + +min; 
+		notknewscore = notknewscore+1;
+    	if(count==length){
+    		$('#home').show();
+    		$('#meaning').show();
+    		$('#readword').hide();
+    		$('#know').hide();
+    		$('#notknow').hide();
+    		$('#shanswer').hide();
+    		$('#readmeaning').hide();
+    		word.innerHTML = "You Knew: "+knewscore;
+    		meaning.innerHTML = "You didn't know: "+notknewscore;
+    	}
+    	else{
+    		$('#readmeaning').hide();
+            $('#meaning').hide();
+            
+            word.innerHTML = keys[index];
+    	}
+	}
+    function readword(){
+        speechSynthesis.speak(new SpeechSynthesisUtterance(keys[index]));
+    }
+    function readmeaning(){
+        speechSynthesis.speak(new SpeechSynthesisUtterance(word_set[keys[index]]));
+    }
+</script>
+</html>
+

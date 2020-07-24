@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style="text-align: center;">
+  GRE Vocabulary Learner
+</h1>
+<br>
+<h3 style="margin-left: 5%;">
+  What does this application offer?
+</h3>
+<h4 style="margin-left: 5%;"> 
+	<ul>
+	  	<li> 514 medium-difficult level GRE words </li>
+	  	<li> An easy way to learn by listening to the words </li>
+	  	<li> Progress can be saved </li>
+	  	<li> 50 Random word test </li>
+  	</ul>
+</h4>
+<br>
+<h3 style="margin-left: 5%;">
+	Why this is the best way to learn?
+</h3>
+<h4 style="margin-left: 5%;">
+	<ul>
+		<li> This application will speak out each word, and the meaning of the word will be spoken as well. </li>
+		<li> It is scientifically proven that the listening and seeing the same thing simultaneously makes stuff easier to remember.  </li>
+		<li> Further, this application does not give out the exact definition of the word [It is never necessary] </li>
+		<li> The meaning of the words are given in concise way, so that it is easy to remember  </li>
+		<li> Lastly, in the meaning of few of the words, its synonms are given as well. This will help to learn more words together and will help in remebering groups of words.
+	</ul>
+</h4>
+<br>
+<h3 style="text-align:center;">
+	{% if not current_user.is_authenticated %}
+	 Please <a href="{{ url_for('auth.login') }}">login</a> to continue.
+	{% endif %}
+</h3>
+{% endblock %}
