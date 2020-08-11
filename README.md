@@ -1,5 +1,7 @@
-Vocabulary Learner
-Website: siddhantsinha99.pythonanywhere.com
+Project Name: Vocabulary Learner
+Author Name: Siddhant Sinha <br>
+Project Date: January 2020 <br>
+Website: siddhantsinha99.pythonanywhere.com <br>
 
 ABOUT
 This application will speak out each word, and the meaning of the word will be spoken as well.
