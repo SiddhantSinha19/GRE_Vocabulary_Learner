@@ -1,4 +1,4 @@
-Project Name: Vocabulary Learner
+Project Name: Vocabulary Learner <br>
 Author Name: Siddhant Sinha <br>
 Project Date: January 2020 <br>
 Website: siddhantsinha99.pythonanywhere.com <br>
