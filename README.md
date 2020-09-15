@@ -34,7 +34,7 @@ Close python, and in the same location in terminal, run flask.
   
   Type following 2 commands in the terminal
   
-    export FLASK_APP=GRE_vocabulary_learner2/
+    export FLASK_APP=vocabulary_learner2/
     
     flask run
     
